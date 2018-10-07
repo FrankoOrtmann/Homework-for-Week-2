@@ -1,0 +1,43 @@
+Sub EasyHomework()
+'Define all Variables
+Dim TickerSymbol As String
+Dim TickerTotal As Double
+Dim CurrentTicker As Double
+Dim LastRow As Double
+Dim Sh As Worksheet
+
+'Tells excel that we don't need to see each change as it happens
+Application.ScreenUpdating = False
+'Loops through each worksheet and activates the subsequent Macro
+For Each Sh In Worksheets
+    Sh.Activate
+    
+'Assign Current Values
+TickerTotal = 0
+CurrentTicker = 2
+LastRow = Cells(Rows.Count, 1).End(xlUp).Row
+Cells(1, 9).Value = "Stock Symbol"
+Cells(1, 10).Value = "Total Yearly Volume"
+'Run For Loop
+For i = 2 To LastRow
+    'If Ticker Symbol is the same as the one below it, then add up the totals
+    If Cells(i + 1, 1).Value = Cells(i, 1).Value Then
+        TickerTotal = TickerTotal + Cells(i, 7).Value
+    Else
+        'pull the value from the active symbol cell and add it to variable TickerSymbol also add to the TickerTotal one more time
+        TickerSymbol = Cells(i, 1).Value
+        TickerTotal = TickerTotal + Cells(i, 7).Value
+        
+        'Print the Symbol and the Total into the Summary table
+        Cells(CurrentTicker, 9).Value = TickerSymbol
+        Cells(CurrentTicker, 10).Value = TickerTotal
+        
+        'Reset the TickerTotal to 0 and increment the ticker by one so the summary table will print to the next line
+        TickerTotal = 0
+        CurrentTicker = CurrentTicker + 1
+    End If
+Next i
+Next Sh
+'Tells excel to go show us each update in real time.
+Application.ScreenUpdating = True
+End Sub
